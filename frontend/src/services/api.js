@@ -24,10 +24,11 @@ export const fetchSubscriptions = async () => {
   }
 };
 
-export const cancelSubscription = async (id) => {
+export const cancelSubscription = async (id, email) => {
   try {
     const response = await axios.post(`${API_URL}/cancel-subscription`, {
-      subscription_id: id
+      subscription_id: id,
+      user_email: email
     });
     return response.data;
   } catch (error) {

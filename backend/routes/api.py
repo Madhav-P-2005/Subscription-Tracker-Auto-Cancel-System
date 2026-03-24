@@ -15,8 +15,8 @@ TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 MY_MOBILE_NUMBER = os.getenv("MY_MOBILE_NUMBER")
-BREVO_API_KEY = os.getenv("BREVO_API_KEY")
-SENDER_EMAIL = os.getenv("SENDER_EMAIL", "notifications@trackmysub.com")
+BREVO_API_KEY = os.getenv("BREVO_SMTP_KEY") # User used BREVO_SMTP_KEY in .env
+SENDER_EMAIL = os.getenv("BREVO_SENDER_EMAIL", "notifications@trackmysub.com")
 SENDER_NAME = os.getenv("SENDER_NAME", "TrackMySub AI")
 
 # Initialize Twilio Client conditionally
@@ -113,6 +113,7 @@ async def cancel_subscription(request: CancelRequest):
 
     # Send Email notification (Fallback/Multi-channel)
     email_html = f"<h3>Subscription Cancelled</h3><p>We've successfully processed the cancellation for <b>{sub['name']}</b>.</p><p>Estimated savings: <b>₹{sub['amount']}</b>/{sub['frequency'].replace('ly', '')}</p><p>Regards,<br/>TrackMySub AI Team</p>"
-    send_email(f"Cancellation Confirmed: {sub['name']}", email_html, "madhavp2023@gmail.com") # Using user's email for demo
+    target_email = request.user_email if request.user_email else "madhavp2023@gmail.com"
+    send_email(f"Cancellation Confirmed: {sub['name']}", email_html, target_email)
     
     return {"message": "Subscription cancelled successfully", "status": "Cancelled"}

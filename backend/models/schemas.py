@@ -29,3 +29,4 @@ class AnalyzeResponse(BaseModel):
 
 class CancelRequest(BaseModel):
     subscription_id: str
+    user_email: Optional[str] = None

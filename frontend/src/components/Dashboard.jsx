@@ -67,8 +67,8 @@ const Dashboard = ({ subscriptions }) => {
 
       <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 p-6 rounded-2xl shadow-xl">
         <h2 className="text-lg font-semibold text-white mb-6">Spending Trend (Last 6 Months)</h2>
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
+        <div className="h-64 w-full min-w-0">
+          <ResponsiveContainer width="100%" height="100%" debounce={100}>
             <AreaChart data={metrics.chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorSpending" x1="0" y1="0" x2="0" y2="1">
