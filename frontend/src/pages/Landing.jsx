@@ -2,13 +2,15 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
+  HiOutlineCloudUpload,
   HiOutlineShieldCheck, 
   HiOutlineLightningBolt, 
   HiOutlineSparkles,
   HiOutlineChip,
   HiOutlineCreditCard,
   HiOutlineBell,
-  HiOutlineArrowRight
+  HiOutlineArrowRight,
+  HiOutlineViewGrid
 } from 'react-icons/hi';
 import { Activity } from 'lucide-react';
 
