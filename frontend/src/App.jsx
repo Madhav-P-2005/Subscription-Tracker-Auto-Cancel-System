@@ -5,6 +5,7 @@ import { auth } from './services/firebase';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
 import DashboardView from './pages/DashboardView';
 import SubscriptionsView from './pages/SubscriptionsView';
 import AnalyzeView from './pages/AnalyzeView';
@@ -79,7 +80,7 @@ function App() {
       <Routes>
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
-        
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         {/* Home acts as the Layout wrapper for all protected routes */}
         <Route 
           path="/" 

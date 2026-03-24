@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { useNavigate, Link } from 'react-router-dom';
-import { Activity, Mail, Lock, Loader2, AlertCircle } from 'lucide-react';
+import { Activity, Mail, Lock, Loader2, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -69,20 +71,43 @@ const Login = () => {
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-300 ml-1">Password</label>
+            <div className="flex justify-between items-center ml-1">
+              <label className="text-sm font-medium text-slate-300">Password</label>
+              <Link to="/forgot-password" virtual className="text-xs text-blue-400 hover:text-blue-300 font-medium">
+                Forgot password?
+              </Link>
+            </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock className="h-5 w-5 text-slate-500" />
               </div>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 focus:border-blue-500 focus:bg-slate-900/80 rounded-xl outline-none text-white transition-all placeholder:text-slate-500"
+                className="w-full pl-10 pr-12 py-3 bg-slate-900/50 border border-slate-600 focus:border-blue-500 focus:bg-slate-900/80 rounded-xl outline-none text-white transition-all placeholder:text-slate-500"
                 placeholder="••••••••"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
             </div>
+          </div>
+
+          <div className="flex items-center gap-2 ml-1">
+            <input 
+              type="checkbox" 
+              id="remember" 
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+              className="w-4 h-4 rounded border-slate-600 bg-slate-900 text-blue-500 focus:ring-blue-500"
+            />
+            <label htmlFor="remember" className="text-sm text-slate-400 cursor-pointer select-none">Remember this device</label>
           </div>
 
           <button
