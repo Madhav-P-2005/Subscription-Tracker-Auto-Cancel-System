@@ -38,31 +38,51 @@ const Home = () => {
       });
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-200 flex font-sans">
+    <div className="min-h-screen bg-[#020617] text-slate-200 flex font-sans overflow-hidden">
       
       {/* Sidebar Navigation */}
-      <Sidebar />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+        user={auth.currentUser}
+      />
 
       {/* Main Content Area */}
-      <div className="flex-1 ml-64 min-h-screen flex flex-col">
+      <div className="flex-1 lg:ml-72 min-h-screen flex flex-col relative">
         
         {/* Top Header */}
-        <header className="h-16 border-b border-slate-800 bg-[#020617]/80 backdrop-blur-md sticky top-0 z-40 flex items-center justify-end px-8">
-           <div className="flex items-center gap-4">
-              <button className="p-2 text-slate-400 hover:text-white transition-colors relative">
+        <header className="h-20 border-b border-slate-800/50 bg-[#020617]/40 backdrop-blur-xl sticky top-0 z-40 flex items-center justify-between lg:justify-end px-6 lg:px-10">
+           <button 
+             onClick={() => setIsSidebarOpen(true)}
+             className="lg:hidden p-2 text-slate-400 hover:text-white transition-colors bg-slate-800/50 rounded-xl border border-slate-700"
+           >
+             <Activity className="w-6 h-6" />
+           </button>
+
+           <div className="flex items-center gap-5">
+              <div className="hidden md:flex flex-col items-end mr-2">
+                 <span className="text-[0.7rem] font-bold text-slate-500 uppercase tracking-widest">Logged in as</span>
+                 <span className="text-[0.8rem] text-blue-400 font-medium">{auth.currentUser?.email}</span>
+              </div>
+              
+              <button className="p-2.5 text-slate-400 hover:text-white transition-all bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 rounded-xl relative shadow-inner">
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full"></span>
+                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-[#020617] ring-1 ring-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span>
               </button>
-              <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400">
-                JD
+
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center p-[1px] shadow-lg shadow-blue-900/20">
+                 <div className="w-full h-full bg-[#020617] rounded-[15px] flex items-center justify-center text-sm font-bold text-white">
+                   {auth.currentUser?.email?.charAt(0).toUpperCase()}
+                 </div>
               </div>
            </div>
         </header>
 
         {/* Dynamic Route Content */}
-        <main className="p-8 max-w-7xl mx-auto w-full">
-           {/* We pass state via context/props to the Outlet if needed, or children can fetch their own */}
+        <main className="p-6 lg:p-10 max-w-7xl mx-auto w-full overflow-y-auto custom-scrollbar">
            <Outlet context={{ subscriptions, handleUpdateSubscription, setSubsDirectly }} />
         </main>
       </div>
