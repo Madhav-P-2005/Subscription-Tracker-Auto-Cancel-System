@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { analyzeTransactions, fetchSubscriptions } from '../services/api';
+import { analyzeTransactions } from '../services/api';
+import { saveSubscriptionsToFirebase, saveTransactionsToFirebase, getSubscriptionsFromFirebase } from '../services/firebase';
 import Dashboard from '../components/Dashboard';
 import Upload from '../components/Upload';
 import SubscriptionList from '../components/SubscriptionList';
 import Insights from '../components/Insights';
 import Alerts from '../components/Alerts';
-import { Activity, Menu, Bell, User } from 'lucide-react';
+import { Activity, Bell, User } from 'lucide-react';
 
 const Home = () => {
   const [subscriptions, setSubscriptions] = useState([]);
   const [loadingConfig, setLoadingConfig] = useState(true);
 
   useEffect(() => {
-    // Initial fetch from backend if any existing subscriptions
+    // Initial fetch from Firebase mapping 
     const getSubs = async () => {
       try {
-        const data = await fetchSubscriptions();
-        if (data && data.length > 0) {
-          setSubscriptions(data);
+        const fbData = await getSubscriptionsFromFirebase();
+        if (fbData && fbData.length > 0) {
+          setSubscriptions(fbData);
         }
       } catch (err) {
-        console.error("Error fetching subscriptions", err);
+        console.error("Error fetching subscriptions from Firebase", err);
       } finally {
         setLoadingConfig(false);
       }
@@ -30,9 +31,22 @@ const Home = () => {
 
   const handleUploadComplete = async (transactions) => {
     try {
+      // 1. Send all data to be stored into firebase
+      await saveTransactionsToFirebase(transactions);
+
+      // 2. Fetch ML detections from FastAPI
       const res = await analyzeTransactions(transactions);
+      
       if (res.subscriptions) {
-        setSubscriptions(prev => [...prev, ...res.subscriptions]);
+        // 3. Save detection mapping states into core Firebase architecture
+        await saveSubscriptionsToFirebase(res.subscriptions);
+        
+        setSubscriptions(prev => {
+          // simple merge logic
+          const existingIds = new Set(prev.map(s => s.id));
+          const newSubs = res.subscriptions.filter(s => !existingIds.has(s.id));
+          return [...prev, ...newSubs];
+        });
       }
     } catch (err) {
       console.error("Error analyzing transactions", err);

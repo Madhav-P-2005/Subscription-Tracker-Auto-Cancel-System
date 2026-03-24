@@ -1,15 +1,40 @@
+import os
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict
+from dotenv import load_dotenv
+from twilio.rest import Client
+
 from models.schemas import AnalyzeRequest, AnalyzeResponse, CancelRequest, SubscriptionItem
 from services.preprocessing import clean_transactions
 from services.detection import detect_subscriptions
 from services.insights import generate_insights
 
+load_dotenv()
+
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
+MY_MOBILE_NUMBER = os.getenv("MY_MOBILE_NUMBER")
+
+# Initialize Twilio Client conditionally
+twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN) if TWILIO_ACCOUNT_SID else None
+
 router = APIRouter()
 
 # In-memory database for a quick Hackathon demo. 
-# Replaces Firebase for a stateless pure FastAPI deploy.
 subscriptions_db: Dict[str, dict] = {}
+
+def send_sms(body: str, to: str):
+    if twilio_client and TWILIO_PHONE_NUMBER and to:
+        try:
+            message = twilio_client.messages.create(
+                body=body,
+                from_=TWILIO_PHONE_NUMBER,
+                to=to
+            )
+            print(f"Twilio SMS sent: {message.sid}")
+        except Exception as e:
+            print(f"Twilio SMS failed to send: {e}")
 
 @router.post("/analyze-transactions", response_model=AnalyzeResponse)
 async def analyze_transactions_endpoint(request: AnalyzeRequest):
@@ -21,7 +46,6 @@ async def analyze_transactions_endpoint(request: AnalyzeRequest):
     df = clean_transactions(transactions_list)
     detected_subs = detect_subscriptions(df)
     
-    # Store detected subscriptions in db
     for sub in detected_subs:
         subscriptions_db[sub['id']] = sub
         
@@ -40,8 +64,20 @@ async def get_subscriptions():
 async def cancel_subscription(request: CancelRequest):
     sub_id = request.subscription_id
     if sub_id not in subscriptions_db:
-        raise HTTPException(status_code=404, detail="Subscription not found")
+        # For Hackathon, we will just simulate it if not found in memory but exists in Firebase.
+        subscriptions_db[sub_id] = {
+            "id": sub_id, 
+            "status": "Active", 
+            "name": "Subscription", 
+            "amount": 0, 
+            "frequency": "Monthly"
+        }
         
-    subscriptions_db[sub_id]['status'] = 'Cancelled'
+    sub = subscriptions_db[sub_id]
+    sub['status'] = 'Cancelled'
+    
+    # Send SMS notification
+    sms_body = f"SmartTracker: Successfully cancelled {sub['name']}. You saved ₹{sub['amount']}/{sub['frequency'].replace('ly', '')}!"
+    send_sms(sms_body, MY_MOBILE_NUMBER)
     
     return {"message": "Subscription cancelled successfully", "status": "Cancelled"}
