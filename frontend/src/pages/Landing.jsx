@@ -287,12 +287,47 @@ const Landing = () => {
         </div>
       </section>
 
-      <footer className="relative z-10 py-12 px-6 border-t border-slate-800/50 max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
-        <p className="text-slate-500 font-bold text-sm tracking-widest uppercase">© 2026 TrackMySub. All Rights Reserved.</p>
-        <div className="flex gap-8">
-          <a href="#" className="text-slate-500 hover:text-white transition-colors text-xs font-black uppercase tracking-widest">Privacy</a>
-          <a href="#" className="text-slate-500 hover:text-white transition-colors text-xs font-black uppercase tracking-widest">Terms</a>
-          <a href="#" className="text-slate-500 hover:text-white transition-colors text-xs font-black uppercase tracking-widest">Security</a>
+      <footer className="relative z-10 py-16 px-6 border-t border-slate-800/50 max-w-7xl mx-auto flex flex-col items-center justify-center gap-6 mt-10">
+        <div className="flex flex-col items-center text-center">
+          <p className="text-blue-500 font-black tracking-[0.3em] uppercase text-xs mb-4">Developed By</p>
+          <h3 className="text-3xl font-black text-white tracking-tight mb-8 flex items-center gap-3">
+             <HiOutlineSparkles className="w-6 h-6 text-indigo-400" />
+             Team Hack Horizon
+             <HiOutlineSparkles className="w-6 h-6 text-purple-400" />
+          </h3>
+          
+          <div className="flex flex-wrap items-center justify-center gap-4 text-slate-400 font-black tracking-widest uppercase text-xs">
+             <div className="flex items-center gap-2 group bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-blue-500/30 transition-all">
+                <span className="text-white group-hover:text-blue-400 transition-colors cursor-default">Madhav P</span>
+                <span className="text-slate-600">(</span>
+                <a href="https://github.com/Madhav-P-2005" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors">GH</a>
+                <span className="text-slate-600">|</span>
+                <a href="https://www.instagram.com/madhavp_14/" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-rose-400 transition-colors">IG</a>
+                <span className="text-slate-600">)</span>
+             </div>
+             
+             <span className="text-slate-800 hidden md:block">•</span>
+             
+             <div className="bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-indigo-500/30 transition-all group cursor-default">
+                <span className="text-slate-300 group-hover:text-indigo-400 transition-colors">Ramnath Bhat</span>
+             </div>
+
+             <span className="text-slate-800 hidden md:block">•</span>
+
+             <div className="bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-emerald-500/30 transition-all group cursor-default">
+                <span className="text-slate-300 group-hover:text-emerald-400 transition-colors">Vinay G B</span>
+             </div>
+
+             <span className="text-slate-800 hidden md:block">•</span>
+
+             <div className="bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-amber-500/30 transition-all group cursor-default">
+                <span className="text-slate-300 group-hover:text-amber-400 transition-colors">Mayur</span>
+             </div>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 mt-8 opacity-50">
+          <Activity className="w-4 h-4 text-slate-500" />
+          <p className="text-slate-600 font-bold block text-[0.6rem] tracking-[0.2em] uppercase">Engineered for the 2026 Hackathon</p>
         </div>
       </footer>
 
