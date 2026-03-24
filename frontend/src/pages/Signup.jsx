@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { useNavigate, Link } from 'react-router-dom';
-import { Activity, Mail, Lock, Loader2, AlertCircle, User as UserIcon } from 'lucide-react';
+import { Activity, Mail, Lock, Loader2, AlertCircle, User as UserIcon, Eye, EyeOff } from 'lucide-react';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -10,6 +10,7 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
@@ -102,14 +103,21 @@ const Signup = () => {
                 <Lock className="h-5 w-5 text-slate-500" />
               </div>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 required
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 focus:border-indigo-500 focus:bg-slate-900/80 rounded-xl outline-none text-white transition-all placeholder:text-slate-500"
+                className="w-full pl-10 pr-12 py-3 bg-slate-900/50 border border-slate-600 focus:border-indigo-500 focus:bg-slate-900/80 rounded-xl outline-none text-white transition-all placeholder:text-slate-500"
                 placeholder="••••••••"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-slate-300 transition-colors"
+              >
+                {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import os
+import os, requests
 from fastapi import APIRouter, HTTPException
 from typing import List, Dict
 from dotenv import load_dotenv
@@ -15,6 +15,9 @@ TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER = os.getenv("TWILIO_PHONE_NUMBER")
 MY_MOBILE_NUMBER = os.getenv("MY_MOBILE_NUMBER")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+SENDER_EMAIL = os.getenv("SENDER_EMAIL", "notifications@trackmysub.com")
+SENDER_NAME = os.getenv("SENDER_NAME", "TrackMySub AI")
 
 # Initialize Twilio Client conditionally
 twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN) if TWILIO_ACCOUNT_SID else None
@@ -35,6 +38,34 @@ def send_sms(body: str, to: str):
             print(f"Twilio SMS sent: {message.sid}")
         except Exception as e:
             print(f"Twilio SMS failed to send: {e}")
+
+def send_email(subject: str, html_content: str, to_email: str):
+    if not BREVO_API_KEY or not to_email:
+        print("Brevo Email skipped: API Key or Recipient missing")
+        return
+    
+    url = "https://api.brevo.com/v3/smtp/email"
+    headers = {
+        "accept": "application/json",
+        "api-key": BREVO_API_KEY,
+        "content-type": "application/json"
+    }
+    
+    payload = {
+        "sender": {"name": SENDER_NAME, "email": SENDER_EMAIL},
+        "to": [{"email": to_email}],
+        "subject": subject,
+        "htmlContent": html_content
+    }
+    
+    try:
+        response = requests.post(url, json=payload, headers=headers)
+        if response.status_code in [201, 202, 200]:
+            print(f"Brevo Email sent to {to_email}")
+        else:
+            print(f"Brevo Email failed: {response.text}")
+    except Exception as e:
+        print(f"Brevo Email error: {e}")
 
 @router.post("/analyze-transactions", response_model=AnalyzeResponse)
 async def analyze_transactions_endpoint(request: AnalyzeRequest):
@@ -79,5 +110,9 @@ async def cancel_subscription(request: CancelRequest):
     # Send SMS notification
     sms_body = f"SmartTracker: Successfully cancelled {sub['name']}. You saved ₹{sub['amount']}/{sub['frequency'].replace('ly', '')}!"
     send_sms(sms_body, MY_MOBILE_NUMBER)
+
+    # Send Email notification (Fallback/Multi-channel)
+    email_html = f"<h3>Subscription Cancelled</h3><p>We've successfully processed the cancellation for <b>{sub['name']}</b>.</p><p>Estimated savings: <b>₹{sub['amount']}</b>/{sub['frequency'].replace('ly', '')}</p><p>Regards,<br/>TrackMySub AI Team</p>"
+    send_email(f"Cancellation Confirmed: {sub['name']}", email_html, "madhavp2023@gmail.com") # Using user's email for demo
     
     return {"message": "Subscription cancelled successfully", "status": "Cancelled"}
