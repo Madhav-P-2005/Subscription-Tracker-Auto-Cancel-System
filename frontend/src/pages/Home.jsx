@@ -6,7 +6,9 @@ import Upload from '../components/Upload';
 import SubscriptionList from '../components/SubscriptionList';
 import Insights from '../components/Insights';
 import Alerts from '../components/Alerts';
-import { Activity, Bell, User } from 'lucide-react';
+import { Activity, Bell, LogOut } from 'lucide-react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../services/firebase';
 
 const Home = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -28,6 +30,14 @@ const Home = () => {
     };
     getSubs();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.error("Error logging out:", err);
+    }
+  };
 
   const handleUploadComplete = async (transactions) => {
     try {
@@ -79,9 +89,13 @@ const Home = () => {
                 <Bell className="w-6 h-6" />
                 <span className="absolute top-2 right-2 w-2 h-2 bg-rose-500 rounded-full"></span>
               </button>
-              <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300">
-                <User className="w-5 h-5" />
-              </div>
+              <button 
+                onClick={handleLogout}
+                className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white hover:bg-rose-500/20 hover:border-rose-500/50 transition-all cursor-pointer"
+                title="Logout"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>
