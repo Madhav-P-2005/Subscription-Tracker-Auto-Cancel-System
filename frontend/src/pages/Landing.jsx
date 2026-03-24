@@ -245,8 +245,8 @@ const Landing = () => {
           <FeatureCard 
             delay={0.6}
             icon={HiOutlineShieldCheck}
-            title="Privacy First"
-            description="Full end-to-end encryption and local data parsing to keep your personal transactions secure."
+            title="Privacy Centric"
+            description="Secure data processing and stateless analysis ensuring your transaction history remains completely private."
           />
         </div>
       </section>
@@ -284,7 +284,7 @@ const Landing = () => {
           <Link to="/signup" className="inline-flex items-center gap-4 bg-white text-[#020617] px-12 py-6 rounded-[2rem] font-black text-2xl hover:bg-blue-50 transition-all active:scale-95 shadow-2xl shadow-white/10">
             Create Free Account
           </Link>
-          <p className="text-slate-600 font-bold uppercase tracking-widest text-xs mt-10 opacity-50">Production Grade FinTech System • Hackathon Deployment</p>
+          <p className="text-slate-600 font-bold uppercase tracking-widest text-xs mt-10 opacity-50">Enterprise-Grade Infrastructure • Secure Processing</p>
         </div>
       </section>
 
@@ -368,7 +368,7 @@ const Landing = () => {
 
           <div className="flex items-center gap-3 opacity-40">
             <Activity className="w-4 h-4 text-slate-400" />
-            <p className="text-slate-400 font-bold block text-[0.7rem] tracking-[0.3em] uppercase">Engineered for Hackathon 2026</p>
+            <p className="text-slate-400 font-bold block text-[0.7rem] tracking-[0.3em] uppercase">Powered by Advanced Machine Learning</p>
           </div>
         </div>
       </footer>
