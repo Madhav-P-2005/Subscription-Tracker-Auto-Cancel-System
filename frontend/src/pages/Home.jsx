@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
-import { getSubscriptionsFromFirebase } from '../services/firebase';
+import { getSubscriptionsFromFirebase, auth } from '../services/firebase';
 import Sidebar from '../components/Sidebar';
-import { Bell } from 'lucide-react';
+import { Bell, Activity } from 'lucide-react';
 
 const Home = () => {
   const [subscriptions, setSubscriptions] = useState([]);
