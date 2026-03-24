@@ -30,9 +30,17 @@ const Sidebar = ({ isOpen, onClose, user }) => {
     { name: 'AI Insights', path: '/insights', icon: HiOutlineLightBulb },
   ];
 
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 1024);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const sidebarVariants = {
-    open: { x: 0, transition: { type: 'spring', stiffness: 300, damping: 30 } },
-    closed: { x: '-100%', transition: { type: 'spring', stiffness: 300, damping: 30 } }
+    open: { x: 0 },
+    closed: { x: isMobile ? '-100%' : 0 }
   };
 
   return (
