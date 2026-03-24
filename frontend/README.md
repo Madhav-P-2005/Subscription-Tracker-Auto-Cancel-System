@@ -1,16 +1,22 @@
-# React + Vite
+# Smart Subscription Tracker - Frontend Architecture
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Problem Statement
+Users face "Subscription Fatigue", unknowingly leaking capital every month due to forgotten or unused recurring services. The application visually unifies transaction insights so users can analyze their capital drift accurately and take immediate cancellation actions.
 
-Currently, two official plugins are available:
+## What We Built
+A stunning, fully responsive FinTech Dashboard UI heavily inspired by premium financial services. It handles initial file uploading, ML analysis rendering, real-time cloud backup, and interactive tracking.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
+* **Framework:** React 19 (Vite)
+* **Styling:** Tailwind CSS v4 (Leveraging native CSS @import semantics)
+* **Design Pattern:** Glassmorphism overlay patterns on dark aesthetics.
+* **Component Library:** Lucide React for modern iconography.
+* **Charting Engine:** Recharts (Area charts for trend lines).
+* **Database / Cloud:** Firebase Firestore (for immediate synchronization).
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Architecture Details
+- **`pages/Home.jsx`**: The fundamental layout shell controlling the application logic, orchestrating state between the top-level API requests and deep Component trees.
+- **`services/api.js`**: Bridges the React ecosystem exclusively to our custom Python AI FastAPI server via parallel Axios execution.
+- **`services/firebase.js`**: Initializes cloud dependencies. All verified ML subscription results are saved to Firebase enabling long-term persistence across user sessions.
+- **`components/Upload.jsx`**: Embeds **Papaparse** to asynchronously process user-supplied CSV files locally on the machine before constructing API payloads.
+- **`components/Insights.jsx` & `Alerts.jsx`**: Contextual visual containers evaluating raw subscription dictionaries to prompt real-time heuristics such as "You could save roughly ₹XX".
