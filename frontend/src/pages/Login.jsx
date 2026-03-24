@@ -73,7 +73,7 @@ const Login = () => {
           <div className="space-y-1.5">
             <div className="flex justify-between items-center ml-1">
               <label className="text-sm font-medium text-slate-300">Password</label>
-              <Link to="/forgot-password" virtual className="text-xs text-blue-400 hover:text-blue-300 font-medium">
+              <Link to="/forgot-password" title="Reset your password" className="text-xs text-blue-400 hover:text-blue-300 font-medium">
                 Forgot password?
               </Link>
             </div>
