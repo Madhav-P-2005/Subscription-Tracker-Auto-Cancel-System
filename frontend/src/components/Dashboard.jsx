@@ -161,6 +161,3 @@ const Dashboard = ({ subscriptions }) => {
 };
 
 export default Dashboard;
-
-
-export default Dashboard;
