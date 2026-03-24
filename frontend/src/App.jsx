@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './services/firebase';
 import Home from './pages/Home';
@@ -55,6 +56,84 @@ const ProtectedRoute = ({ children, user }) => {
   return children;
 };
 
+// Animation variants for page transitions
+const pageVariants = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  exit: { opacity: 0, y: -10, transition: { duration: 0.3, ease: "easeIn" } }
+};
+
+const AnimatedRoutes = ({ user, loading }) => {
+  const location = useLocation();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex flex-col items-center gap-4"
+        >
+          <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
+          <p className="text-slate-400 font-medium animate-pulse">Loading TrackMySub...</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/login" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full h-full">
+            {!user ? <Login /> : <Navigate to="/" />}
+          </motion.div>
+        } />
+        <Route path="/signup" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full h-full">
+            {!user ? <Signup /> : <Navigate to="/" />}
+          </motion.div>
+        } />
+        <Route path="/forgot-password" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full h-full">
+            <ForgotPassword />
+          </motion.div>
+        } />
+        
+        <Route 
+          path="/" 
+          element={
+            <ProtectedRoute user={user}>
+              <Home user={user} />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full">
+              <DashboardWrapper />
+            </motion.div>
+          } />
+          <Route path="subscriptions" element={
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full">
+              <SubscriptionsWrapper />
+            </motion.div>
+          } />
+          <Route path="analyze" element={
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full">
+              <AnalyzeWrapper />
+            </motion.div>
+          } />
+          <Route path="insights" element={
+            <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full">
+              <InsightsWrapper />
+            </motion.div>
+          } />
+        </Route>
+      </Routes>
+    </AnimatePresence>
+  );
+};
+
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -67,37 +146,9 @@ function App() {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
-        <Loader2 className="w-10 h-10 text-blue-500 animate-spin" />
-      </div>
-    );
-  }
-
   return (
     <Router>
-      <Routes>
-        <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-        <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* Home acts as the Layout wrapper for all protected routes */}
-        <Route 
-          path="/" 
-          element={
-            <ProtectedRoute user={user}>
-              <Home />
-            </ProtectedRoute>
-          }
-        >
-          {/* Nested sub-routes */}
-          <Route index element={<DashboardWrapper />} />
-          <Route path="subscriptions" element={<SubscriptionsWrapper />} />
-          <Route path="analyze" element={<AnalyzeWrapper />} />
-          <Route path="insights" element={<InsightsWrapper />} />
-        </Route>
-
-      </Routes>
+      <AnimatedRoutes user={user} loading={loading} />
     </Router>
   );
 }
