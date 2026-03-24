@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Calendar, RefreshCw, XCircle, TrendingDown, Clock } from 'lucide-react';
 import { format } from 'date-fns';
-import { mockFirebaseCancel } from '../services/firebase';
+import { cancelSubscription } from '../services/api';
 
 const SubscriptionCard = ({ subscription, onUpdate }) => {
   const [cancelling, setCancelling] = useState(false);
@@ -14,7 +14,7 @@ const SubscriptionCard = ({ subscription, onUpdate }) => {
     setCancelling(true);
     try {
       // API Call
-      await mockFirebaseCancel(id);
+      await cancelSubscription(id);
       setShowSavings(true);
       setTimeout(() => {
         onUpdate(id, { ...subscription, status: 'Cancelled' });
