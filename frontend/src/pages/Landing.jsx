@@ -366,9 +366,16 @@ const Landing = () => {
              </div>
           </div>
 
-          <div className="flex items-center gap-3 opacity-40">
-            <Activity className="w-4 h-4 text-slate-400" />
-            <p className="text-slate-400 font-bold block text-[0.7rem] tracking-[0.3em] uppercase">Powered by Advanced Machine Learning</p>
+          <div className="flex flex-col items-center gap-2 mt-8">
+            <div className="flex items-center gap-3 opacity-40">
+              <Activity className="w-4 h-4 text-slate-400" />
+              <p className="text-slate-400 font-bold block text-[0.7rem] tracking-[0.3em] uppercase">Powered by Advanced Machine Learning</p>
+            </div>
+            <div className="opacity-30 flex items-center gap-2">
+              <p className="text-slate-500 font-black block text-[0.6rem] tracking-[0.2em] uppercase text-center">
+                 Proudly represented by KLE's BCA P.C Jabins College, Hubballi
+              </p>
+            </div>
           </div>
         </div>
       </footer>
