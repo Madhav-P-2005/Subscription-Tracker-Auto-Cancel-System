@@ -12,6 +12,7 @@ import {
   HiOutlineArrowRight,
   HiOutlineViewGrid
 } from 'react-icons/hi';
+import { FaGithub, FaInstagram, FaCode } from 'react-icons/fa';
 import { Activity } from 'lucide-react';
 
 const FeatureCard = ({ icon: Icon, title, description, delay }) => (
@@ -287,47 +288,88 @@ const Landing = () => {
         </div>
       </section>
 
-      <footer className="relative z-10 py-16 px-6 border-t border-slate-800/50 max-w-7xl mx-auto flex flex-col items-center justify-center gap-6 mt-10">
-        <div className="flex flex-col items-center text-center">
-          <p className="text-blue-500 font-black tracking-[0.3em] uppercase text-xs mb-4">Developed By</p>
-          <h3 className="text-3xl font-black text-white tracking-tight mb-8 flex items-center gap-3">
-             <HiOutlineSparkles className="w-6 h-6 text-indigo-400" />
-             Team Hack Horizon
-             <HiOutlineSparkles className="w-6 h-6 text-purple-400" />
-          </h3>
+      <footer className="relative z-10 py-24 px-6 mt-10 overflow-hidden border-t border-slate-800/80 bg-slate-950/50 relative">
+        {/* Glow Effects */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-2xl h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-[200px] bg-blue-500/10 blur-[120px] pointer-events-none"></div>
+
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center relative z-10">
+          <div className="inline-flex items-center justify-center gap-3 bg-slate-900/60 border border-slate-800/80 px-8 py-4 rounded-full backdrop-blur-md mb-16 shadow-[0_0_30px_rgba(59,130,246,0.1)] hover:border-blue-500/30 transition-all cursor-default group">
+             <div className="bg-blue-500/20 p-2 rounded-full group-hover:bg-blue-500/30 transition-all">
+                <FaCode className="w-5 h-5 text-blue-400" />
+             </div>
+             <span className="text-white font-black tracking-[0.3em] uppercase text-sm">Team Hack Horizon</span>
+          </div>
           
-          <div className="flex flex-wrap items-center justify-center gap-4 text-slate-400 font-black tracking-widest uppercase text-xs">
-             <div className="flex items-center gap-2 group bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-blue-500/30 transition-all">
-                <span className="text-white group-hover:text-blue-400 transition-colors cursor-default">Madhav P</span>
-                <span className="text-slate-600">(</span>
-                <a href="https://github.com/Madhav-P-2005" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-blue-400 transition-colors">GH</a>
-                <span className="text-slate-600">|</span>
-                <a href="https://www.instagram.com/madhavp_14/" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-rose-400 transition-colors">IG</a>
-                <span className="text-slate-600">)</span>
+          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-16 mb-20 w-full max-w-4xl">
+             {/* Dev 1 */}
+             <div className="flex flex-col items-center gap-4 group">
+                <div className="w-24 h-24 rounded-full bg-slate-800/50 border border-slate-700/50 p-1.5 group-hover:border-blue-500/50 group-hover:shadow-[0_0_40px_rgba(59,130,246,0.3)] transition-all duration-500">
+                   <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden relative">
+                      <div className="absolute inset-0 bg-blue-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <span className="text-3xl font-black text-slate-500 group-hover:text-blue-400 transition-colors z-10">MP</span>
+                   </div>
+                </div>
+                <div className="text-center">
+                   <h4 className="text-white font-bold tracking-wide text-lg group-hover:text-blue-400 transition-colors">Madhav P</h4>
+                   <div className="flex items-center justify-center gap-3 mt-4">
+                     <a href="https://github.com/Madhav-P-2005" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-white transition-colors bg-slate-800/40 border border-slate-700/50 p-2.5 rounded-xl hover:bg-slate-700 hover:border-slate-500 shadow-inner group/icon">
+                       <FaGithub className="w-5 h-5 group-hover/icon:scale-110 transition-transform" />
+                     </a>
+                     <a href="https://www.instagram.com/madhavp_14/" target="_blank" rel="noreferrer" className="text-slate-500 hover:text-rose-400 transition-colors bg-slate-800/40 border border-slate-700/50 p-2.5 rounded-xl hover:bg-rose-500/10 hover:border-rose-500/30 shadow-inner group/icon">
+                       <FaInstagram className="w-5 h-5 group-hover/icon:scale-110 transition-transform" />
+                     </a>
+                   </div>
+                </div>
              </div>
              
-             <span className="text-slate-800 hidden md:block">•</span>
-             
-             <div className="bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-indigo-500/30 transition-all group cursor-default">
-                <span className="text-slate-300 group-hover:text-indigo-400 transition-colors">Ramnath Bhat</span>
+             {/* Dev 2 */}
+             <div className="flex flex-col items-center gap-4 group">
+                <div className="w-24 h-24 rounded-full bg-slate-800/50 border border-slate-700/50 p-1.5 group-hover:border-indigo-500/50 group-hover:shadow-[0_0_40px_rgba(99,102,241,0.3)] transition-all duration-500 cursor-default">
+                   <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden relative">
+                      <div className="absolute inset-0 bg-indigo-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <span className="text-3xl font-black text-slate-500 group-hover:text-indigo-400 transition-colors z-10">RB</span>
+                   </div>
+                </div>
+                <div className="text-center">
+                   <h4 className="text-white font-bold tracking-wide text-lg group-hover:text-indigo-400 transition-colors">Ramnath Bhat</h4>
+                   <p className="text-slate-600 text-[0.65rem] font-black uppercase tracking-[0.2em] mt-3">Developer</p>
+                </div>
              </div>
 
-             <span className="text-slate-800 hidden md:block">•</span>
-
-             <div className="bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-emerald-500/30 transition-all group cursor-default">
-                <span className="text-slate-300 group-hover:text-emerald-400 transition-colors">Vinay G B</span>
+             {/* Dev 3 */}
+             <div className="flex flex-col items-center gap-4 group">
+                <div className="w-24 h-24 rounded-full bg-slate-800/50 border border-slate-700/50 p-1.5 group-hover:border-emerald-500/50 group-hover:shadow-[0_0_40px_rgba(16,185,129,0.3)] transition-all duration-500 cursor-default">
+                   <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden relative">
+                      <div className="absolute inset-0 bg-emerald-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <span className="text-3xl font-black text-slate-500 group-hover:text-emerald-400 transition-colors z-10">VG</span>
+                   </div>
+                </div>
+                <div className="text-center">
+                   <h4 className="text-white font-bold tracking-wide text-lg group-hover:text-emerald-400 transition-colors">Vinay G B</h4>
+                   <p className="text-slate-600 text-[0.65rem] font-black uppercase tracking-[0.2em] mt-3">Developer</p>
+                </div>
              </div>
 
-             <span className="text-slate-800 hidden md:block">•</span>
-
-             <div className="bg-slate-900/40 border border-slate-800/50 px-4 py-2 rounded-xl hover:border-amber-500/30 transition-all group cursor-default">
-                <span className="text-slate-300 group-hover:text-amber-400 transition-colors">Mayur</span>
+             {/* Dev 4 */}
+             <div className="flex flex-col items-center gap-4 group">
+                <div className="w-24 h-24 rounded-full bg-slate-800/50 border border-slate-700/50 p-1.5 group-hover:border-amber-500/50 group-hover:shadow-[0_0_40px_rgba(245,158,11,0.3)] transition-all duration-500 cursor-default">
+                   <div className="w-full h-full rounded-full bg-slate-900 flex items-center justify-center overflow-hidden relative">
+                      <div className="absolute inset-0 bg-amber-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      <span className="text-3xl font-black text-slate-500 group-hover:text-amber-400 transition-colors z-10">MR</span>
+                   </div>
+                </div>
+                <div className="text-center">
+                   <h4 className="text-white font-bold tracking-wide text-lg group-hover:text-amber-400 transition-colors">Mayur</h4>
+                   <p className="text-slate-600 text-[0.65rem] font-black uppercase tracking-[0.2em] mt-3">Developer</p>
+                </div>
              </div>
           </div>
-        </div>
-        <div className="flex items-center gap-3 mt-8 opacity-50">
-          <Activity className="w-4 h-4 text-slate-500" />
-          <p className="text-slate-600 font-bold block text-[0.6rem] tracking-[0.2em] uppercase">Engineered for the 2026 Hackathon</p>
+
+          <div className="flex items-center gap-3 opacity-40">
+            <Activity className="w-4 h-4 text-slate-400" />
+            <p className="text-slate-400 font-bold block text-[0.7rem] tracking-[0.3em] uppercase">Engineered for Hackathon 2026</p>
+          </div>
         </div>
       </footer>
 
