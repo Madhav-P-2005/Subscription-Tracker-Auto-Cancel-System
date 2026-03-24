@@ -31,7 +31,7 @@ const Signup = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       // In a real app, update profile with name here if needed
-      navigate('/');
+      navigate('/dashboard');
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/email-already-in-use') {
