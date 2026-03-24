@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { Link } from 'react-router-dom';
-import { Activity, Mail, Loader2, AlertCircle, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { 
+  HiOutlineMail, 
+  HiOutlineArrowLeft, 
+  HiOutlineCheckCircle, 
+  HiOutlineInformationCircle,
+  HiOutlineSparkles
+} from 'react-icons/hi';
+import { Activity } from 'lucide-react';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
@@ -18,13 +26,13 @@ const ForgotPassword = () => {
     
     try {
       await sendPasswordResetEmail(auth, email);
-      setMessage('Password reset link sent! Please check your inbox.');
+      setMessage('Recovery link dispatched. Please check your secure inbox.');
     } catch (err) {
       console.error(err);
       if (err.code === 'auth/user-not-found') {
-        setError('No account found with this email address.');
+        setError('Reference Error: No account matching this identity.');
       } else {
-        setError('Failed to send reset email. Please try again.');
+        setError('System Error: Failed to initiate recovery protocol.');
       }
     } finally {
       setLoading(false);
@@ -32,48 +40,64 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-200 font-sans selection:bg-blue-500/30 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-[#020617] text-slate-200 flex items-center justify-center p-6 relative overflow-hidden font-sans">
       
-      {/* Background Orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl opacity-50 mix-blend-screen pointer-events-none"></div>
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl opacity-50 mix-blend-screen pointer-events-none"></div>
+      {/* Background Decorative Elements */}
+      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="w-full max-w-md bg-slate-800/50 backdrop-blur-xl border border-slate-700 p-8 rounded-3xl shadow-2xl relative z-10">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 p-3 rounded-2xl mb-4 shadow-lg">
-            <Activity className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-3xl font-bold text-white tracking-tight">Reset Password</h2>
-          <p className="text-slate-400 mt-2 text-sm">We'll send you a link to recover your account</p>
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-lg bg-slate-900/40 backdrop-blur-2xl border border-slate-800/50 p-10 md:p-14 rounded-[3rem] shadow-2xl relative z-10"
+      >
+        <div className="text-center mb-12">
+          <motion.div 
+            initial={{ y: -20 }}
+            animate={{ y: 0 }}
+            className="inline-flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600 p-4 rounded-3xl mb-6 shadow-xl shadow-blue-500/20"
+          >
+            <Activity className="w-10 h-10 text-white" />
+          </motion.div>
+          <h2 className="text-4xl font-black text-white tracking-tight leading-tight">Reset <span className="text-blue-500">Access</span></h2>
+          <p className="text-slate-500 mt-3 font-bold uppercase tracking-widest text-[0.7rem]">Identity Recovery Protocol</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl flex items-start gap-3 text-rose-400 text-sm">
-            <AlertCircle className="w-5 h-5 shrink-0" />
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 p-5 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex items-start gap-3 text-rose-400 text-sm font-medium"
+          >
+            <HiOutlineInformationCircle className="w-6 h-6 shrink-0" />
             <p>{error}</p>
-          </div>
+          </motion.div>
         )}
 
         {message && (
-          <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-start gap-3 text-emerald-400 text-sm">
-            <CheckCircle2 className="w-5 h-5 shrink-0" />
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 p-5 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-start gap-3 text-emerald-400 text-sm font-medium"
+          >
+            <HiOutlineCheckCircle className="w-6 h-6 shrink-0" />
             <p>{message}</p>
-          </div>
+          </motion.div>
         )}
 
-        <form onSubmit={handleReset} className="space-y-6">
-          <div className="space-y-1.5">
-            <label className="text-sm font-medium text-slate-300 ml-1">Email Address</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Mail className="h-5 w-5 text-slate-500" />
+        <form onSubmit={handleReset} className="space-y-8">
+          <div className="space-y-2">
+            <label className="text-xs font-black text-slate-500 uppercase tracking-[0.2em] ml-2">Verification Email</label>
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                <HiOutlineMail className="h-6 w-6 text-slate-500 group-focus-within:text-blue-400 transition-colors" />
               </div>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 bg-slate-900/50 border border-slate-600 focus:border-blue-500 focus:bg-slate-900/80 rounded-xl outline-none text-white transition-all placeholder:text-slate-500"
+                className="w-full pl-14 pr-6 py-4.5 bg-slate-950/40 border border-slate-800 focus:border-blue-500/50 focus:bg-slate-950/80 rounded-2xl outline-none text-white transition-all placeholder:text-slate-700 font-medium"
                 placeholder="you@example.com"
               />
             </div>
@@ -82,19 +106,26 @@ const ForgotPassword = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white py-3.5 px-4 rounded-xl font-medium transition-all transform active:scale-[0.98] shadow-lg shadow-blue-500/25"
+            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-blue-50 text-slate-950 py-5 px-8 rounded-2xl font-black text-lg transition-all active:scale-[0.98] shadow-2xl shadow-white/5 group relative overflow-hidden"
           >
-            {loading ? <Loader2 className="animate-spin w-5 h-5" /> : 'Send Reset Link'}
+            {loading ? (
+              <div className="w-6 h-6 border-4 border-slate-900/20 border-t-slate-900 rounded-full animate-spin" />
+            ) : (
+              <>
+                <HiOutlineSparkles className="w-6 h-6 text-blue-600 transition-transform group-hover:rotate-12" />
+                <span className="relative z-10">Send Recovery Link</span>
+              </>
+            )}
           </button>
         </form>
 
-        <div className="mt-8 text-center">
-          <Link to="/login" className="inline-flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm">
-            <ArrowLeft className="w-4 h-4" />
-            Back to Login
+        <div className="mt-12 text-center">
+          <Link to="/login" className="inline-flex items-center gap-2 text-slate-500 hover:text-white transition-all font-black uppercase tracking-widest text-[0.7rem] group">
+            <HiOutlineArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
+            Return to Terminal
           </Link>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
