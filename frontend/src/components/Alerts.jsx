@@ -4,10 +4,11 @@ import { format, differenceInDays } from 'date-fns';
 
 const Alerts = ({ subscriptions }) => {
   const upcoming = subscriptions.filter(sub => {
-    if (sub.status !== 'Active') return false;
-    const days = differenceInDays(new Date(sub.nextBillingDate), new Date());
+    const bDate = sub.next_billing_date || sub.nextBillingDate;
+    if (!bDate) return false;
+    const days = differenceInDays(new Date(bDate), new Date());
     return days >= 0 && days <= 7;
-  }).sort((a, b) => new Date(a.nextBillingDate) - new Date(b.nextBillingDate));
+  }).sort((a, b) => new Date(a.next_billing_date || a.nextBillingDate) - new Date(b.next_billing_date || b.nextBillingDate));
 
   return (
     <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 p-6 rounded-2xl shadow-xl w-full">
@@ -22,7 +23,8 @@ const Alerts = ({ subscriptions }) => {
       ) : (
         <div className="space-y-3">
           {upcoming.map((sub) => {
-            const daysLeft = differenceInDays(new Date(sub.nextBillingDate), new Date());
+            const bDate = sub.next_billing_date || sub.nextBillingDate;
+            const daysLeft = bDate ? differenceInDays(new Date(bDate), new Date()) : 0;
             return (
               <div key={sub.id} className="flex items-start gap-4 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl transition-all hover:bg-amber-500/20">
                 <div className="bg-amber-500/20 p-2 rounded-lg">
@@ -31,7 +33,7 @@ const Alerts = ({ subscriptions }) => {
                 <div className="flex-1">
                   <h4 className="text-white font-medium">{sub.name} will renew</h4>
                   <p className="text-amber-200/80 text-sm mt-1">
-                    {daysLeft === 0 ? 'Today' : `In ${daysLeft} day${daysLeft > 1 ? 's' : ''}`} • {format(new Date(sub.nextBillingDate), 'MMM dd, yyyy')}
+                    {daysLeft === 0 ? 'Today' : `In ${daysLeft} day${daysLeft > 1 ? 's' : ''}`} • {bDate ? format(new Date(bDate), 'MMM dd, yyyy') : 'N/A'}
                   </p>
                 </div>
                 <div className="text-right">

@@ -22,7 +22,7 @@ const Dashboard = ({ subscriptions }) => {
   const metrics = useMemo(() => {
     let totalMonthlyCost = 0;
     activeSubs.forEach(s => {
-      totalMonthlyCost += s.frequency === 'yearly' ? s.amount / 12 : s.amount;
+      totalMonthlyCost += s.frequency?.toLowerCase() === 'yearly' ? s.amount / 12 : s.amount;
     });
     
     // Create dummy chart data based on active subs to show a 6 month projection

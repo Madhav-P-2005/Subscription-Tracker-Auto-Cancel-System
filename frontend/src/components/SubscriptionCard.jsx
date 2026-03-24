@@ -8,8 +8,10 @@ const SubscriptionCard = ({ subscription, onUpdate }) => {
   const [cancelling, setCancelling] = useState(false);
   const [showSavings, setShowSavings] = useState(false);
 
-  const { id, name, amount, frequency, nextBillingDate, status } = subscription;
+  const { id, name, amount, frequency, next_billing_date, status } = subscription;
   const isActive = status === 'Active';
+
+  const billingDate = next_billing_date || subscription.nextBillingDate;
 
   const handleCancel = async () => {
     setCancelling(true);
@@ -58,7 +60,7 @@ const SubscriptionCard = ({ subscription, onUpdate }) => {
       <div className="space-y-2 mt-4 text-sm text-slate-300">
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-slate-500" />
-          <span>Next Billing: <span className="text-white">{format(new Date(nextBillingDate), 'MMM dd, yyyy')}</span></span>
+          <span>Next Billing: <span className="text-white">{billingDate ? format(new Date(billingDate), 'MMM dd, yyyy') : 'N/A'}</span></span>
         </div>
         <div className="flex items-center gap-2">
           <RefreshCw className="w-4 h-4 text-slate-500" />
