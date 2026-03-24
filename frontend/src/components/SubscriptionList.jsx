@@ -20,7 +20,7 @@ const SubscriptionList = ({ subscriptions, onUpdateSubscription }) => {
           Once you analyze your bank transactions, your managed recurring services will appear here automatically.
         </p>
         <Link 
-          to="/analyze"
+          to="/dashboard/analyze"
           className="mt-10 inline-flex items-center gap-3 bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-blue-600/20"
         >
            <HiOutlinePlus className="w-6 h-6" /> Start First Analysis

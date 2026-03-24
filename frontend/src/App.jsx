@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ForgotPassword from './pages/ForgotPassword';
+import Landing from './pages/Landing';
 import DashboardView from './pages/DashboardView';
 import SubscriptionsView from './pages/SubscriptionsView';
 import AnalyzeView from './pages/AnalyzeView';
@@ -68,14 +69,14 @@ const AnimatedRoutes = ({ user, loading }) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0f172a] flex items-center justify-center">
+      <div className="min-h-screen bg-[#020617] flex items-center justify-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="flex flex-col items-center gap-4"
         >
           <Loader2 className="w-12 h-12 text-blue-500 animate-spin" />
-          <p className="text-slate-400 font-medium animate-pulse">Loading TrackMySub...</p>
+          <p className="text-slate-400 font-black uppercase tracking-widest text-[0.7rem] animate-pulse">Initializing TrackMySub...</p>
         </motion.div>
       </div>
     );
@@ -84,14 +85,20 @@ const AnimatedRoutes = ({ user, loading }) => {
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
+        {/* Public Routes */}
+        <Route path="/" element={
+          <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full">
+            <Landing />
+          </motion.div>
+        } />
         <Route path="/login" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full h-full">
-            {!user ? <Login /> : <Navigate to="/" />}
+            {!user ? <Login /> : <Navigate to="/dashboard" />}
           </motion.div>
         } />
         <Route path="/signup" element={
           <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit" className="w-full h-full">
-            {!user ? <Signup /> : <Navigate to="/" />}
+            {!user ? <Signup /> : <Navigate to="/dashboard" />}
           </motion.div>
         } />
         <Route path="/forgot-password" element={
@@ -100,8 +107,9 @@ const AnimatedRoutes = ({ user, loading }) => {
           </motion.div>
         } />
         
+        {/* Protected Dashboard Routes */}
         <Route 
-          path="/" 
+          path="/dashboard" 
           element={
             <ProtectedRoute user={user}>
               <Home user={user} />
@@ -129,6 +137,9 @@ const AnimatedRoutes = ({ user, loading }) => {
             </motion.div>
           } />
         </Route>
+
+        {/* Catch-all Redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
   );

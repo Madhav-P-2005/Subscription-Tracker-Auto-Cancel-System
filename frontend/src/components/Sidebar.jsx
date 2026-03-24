@@ -24,10 +24,10 @@ const Sidebar = ({ isOpen, onClose, user }) => {
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: HiOutlineViewGrid },
-    { name: 'Subscriptions', path: '/subscriptions', icon: HiOutlineCreditCard },
-    { name: 'Analyze Data', path: '/analyze', icon: HiOutlineChip },
-    { name: 'AI Insights', path: '/insights', icon: HiOutlineLightBulb },
+    { name: 'Dashboard', path: '/dashboard', icon: HiOutlineViewGrid },
+    { name: 'Subscriptions', path: '/dashboard/subscriptions', icon: HiOutlineCreditCard },
+    { name: 'Analyze Data', path: '/dashboard/analyze', icon: HiOutlineChip },
+    { name: 'AI Insights', path: '/dashboard/insights', icon: HiOutlineLightBulb },
   ];
 
   const [isMobile, setIsMobile] = React.useState(window.innerWidth < 1024);
