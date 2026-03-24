@@ -93,19 +93,22 @@ const Sidebar = ({ isOpen, onClose, user }) => {
                   : 'text-slate-400 hover:text-white hover:bg-slate-800/40 border border-transparent'}
               `}
             >
-              <div className="flex items-center gap-3.5 relative z-10">
-                <item.icon className="w-6 h-6 transition-transform group-hover:scale-110" />
-                <span className="font-semibold tracking-wide text-[0.95rem]">{item.name}</span>
-              </div>
-              
-              <motion.div className="relative z-10">
-                <HiChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-0.5" />
-              </motion.div>
+              {({ isActive }) => (
+                <>
+                  <div className="flex items-center gap-3.5 relative z-10">
+                    <item.icon className="w-6 h-6 transition-transform group-hover:scale-110" />
+                    <span className="font-semibold tracking-wide text-[0.95rem]">{item.name}</span>
+                  </div>
+                  
+                  <motion.div className="relative z-10">
+                    <HiChevronRight className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-0.5" />
+                  </motion.div>
 
-              <NavLink
-                to={item.path}
-                className={({ isActive }) => isActive ? "absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent pointer-events-none" : "" }
-              />
+                  {isActive && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent pointer-events-none" />
+                  )}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
