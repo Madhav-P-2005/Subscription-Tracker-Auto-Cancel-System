@@ -106,13 +106,60 @@ const Landing = () => {
           className="relative lg:block hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-600/20 blur-[100px] rounded-full"></div>
-          <div className="relative bg-slate-900/60 backdrop-blur-3xl border border-slate-800/50 p-1 rounded-[3rem] shadow-2xl overflow-hidden active-glow">
-            <img 
-              src="https://images.unsplash.com/photo-1611974717482-48ec8cfec954?q=80&w=2070&auto=format&fit=crop" 
-              alt="Dashboard Preview" 
-              className="rounded-[2.8rem] opacity-80"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div>
+          
+          <div className="relative bg-[#020617]/90 backdrop-blur-3xl border border-slate-800/80 p-6 rounded-[3rem] shadow-[0_0_60px_-15px_rgba(59,130,246,0.2)] overflow-hidden active-glow aspect-square md:aspect-[4/3] flex flex-col justify-between transform rotate-2 hover:rotate-0 transition-transform duration-700">
+             {/* Mockup Header */}
+             <div className="flex justify-between items-center px-2 py-2 border-b border-slate-800/80 pb-4">
+                <div className="flex gap-2.5">
+                   <div className="w-3.5 h-3.5 rounded-full bg-rose-500/80 shadow-[0_0_10px_rgba(244,63,94,0.5)]"></div>
+                   <div className="w-3.5 h-3.5 rounded-full bg-amber-500/80 shadow-[0_0_10px_rgba(245,158,11,0.5)]"></div>
+                   <div className="w-3.5 h-3.5 rounded-full bg-emerald-500/80 shadow-[0_0_10px_rgba(16,185,129,0.5)]"></div>
+                </div>
+                <div className="h-6 w-32 bg-slate-800/60 rounded-full"></div>
+             </div>
+             
+             {/* Mockup Content */}
+             <div className="flex-1 flex flex-col gap-5 mt-6 relative z-10 w-full">
+                <div className="flex gap-4">
+                  <div className="flex-1 bg-slate-800/40 rounded-3xl p-5 border border-slate-700/50 shadow-inner">
+                     <div className="w-10 h-10 rounded-2xl bg-blue-500/20 flex items-center justify-center mb-4 border border-blue-500/30">
+                        <HiOutlineViewGrid className="w-6 h-6 text-blue-400" />
+                     </div>
+                     <div className="w-2/3 h-3 bg-slate-600/50 rounded-full mb-3"></div>
+                     <div className="w-full h-6 bg-slate-300/80 rounded-full"></div>
+                  </div>
+                  <div className="flex-1 bg-slate-800/40 rounded-3xl p-5 border border-slate-700/50 shadow-inner">
+                     <div className="w-10 h-10 rounded-2xl bg-indigo-500/20 flex items-center justify-center mb-4 border border-indigo-500/30">
+                        <HiOutlineCreditCard className="w-6 h-6 text-indigo-400" />
+                     </div>
+                     <div className="w-2/3 h-3 bg-slate-600/50 rounded-full mb-3"></div>
+                     <div className="w-full h-6 bg-slate-300/80 rounded-full"></div>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 mt-2">
+                  {[
+                    { color: "text-rose-400", bg: "bg-rose-500/10", border: "border-rose-500/20" },
+                    { color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20" },
+                    { color: "text-blue-400", bg: "bg-blue-500/10", border: "border-blue-500/20" }
+                  ].map((style, i) => (
+                    <div key={i} className="flex items-center justify-between p-4 bg-slate-800/30 rounded-2xl border border-slate-700/40 backdrop-blur-md">
+                       <div className="flex items-center gap-4 w-2/3">
+                          <div className={`w-12 h-12 rounded-[1rem] ${style.bg} ${style.border} border flex shrink-0 items-center justify-center`}>
+                             <div className={`w-5 h-5 rounded-full ${style.bg.replace('/10', '/50')}`}></div>
+                          </div>
+                          <div className="w-full">
+                             <div className="w-full max-w[120px] h-4 bg-slate-400/80 rounded-full mb-2"></div>
+                             <div className="w-2/3 h-3 bg-slate-600/60 rounded-full"></div>
+                          </div>
+                       </div>
+                       <div className={`w-20 h-8 ${style.bg} rounded-xl border ${style.border} shrink-0`}></div>
+                    </div>
+                  ))}
+                </div>
+             </div>
+             
+             <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent pointer-events-none z-20"></div>
           </div>
         </motion.div>
       </section>
