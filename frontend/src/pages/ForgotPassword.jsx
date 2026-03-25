@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { 
   HiOutlineMail, 
@@ -26,14 +27,17 @@ const ForgotPassword = () => {
     
     try {
       await sendPasswordResetEmail(auth, email);
-      setMessage('Recovery link dispatched. Please check your secure inbox.');
+      const msg = 'Recovery link dispatched. Please check your secure inbox.';
+      setMessage(msg);
+      toast.success(msg);
     } catch (err) {
       console.error(err);
+      let errMsg = 'System Error: Failed to initiate recovery protocol.';
       if (err.code === 'auth/user-not-found') {
-        setError('Reference Error: No account matching this identity.');
-      } else {
-        setError('System Error: Failed to initiate recovery protocol.');
+        errMsg = 'Reference Error: No account matching this identity.';
       }
+      setError(errMsg);
+      toast.error(errMsg);
     } finally {
       setLoading(false);
     }

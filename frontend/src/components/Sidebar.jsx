@@ -13,13 +13,16 @@ import {
 import { Activity } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../services/firebase';
+import { toast } from 'react-hot-toast';
 
 const Sidebar = ({ isOpen, onClose, user }) => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      toast.success("Successfully logged out. Stay secure.");
     } catch (err) {
       console.error("Error logging out:", err);
+      toast.error("Failed to execute logout protocol.");
     }
   };
 

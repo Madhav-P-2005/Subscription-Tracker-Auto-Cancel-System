@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { 
   HiOutlineMail, 
@@ -31,16 +32,18 @@ const Signup = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       // In a real app, update profile with name here if needed
+      toast.success('Account fully initialized!');
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
+      let msg = 'Initialization failed. Please verify your network and details.';
       if (err.code === 'auth/email-already-in-use') {
-         setError('This email is already associated with an account.');
+         msg = 'This email is already associated with an account.';
       } else if (err.code === 'auth/weak-password') {
-         setError('Security risk: Password must be at least 6 characters.');
-      } else {
-         setError('Initialization failed. Please verify your network and details.');
+         msg = 'Security risk: Password must be at least 6 characters.';
       }
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

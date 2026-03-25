@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { 
   HiOutlineMail, 
@@ -30,10 +31,13 @@ const Login = () => {
     
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success('Successfully logged in!');
       navigate('/dashboard');
     } catch (err) {
       console.error(err);
-      setError('Invalid credentials. Please verify your email and password.');
+      const msg = 'Invalid credentials. Please verify your email and password.';
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
