@@ -1,40 +1,83 @@
-# Smart Subscription Tracker - Backend Architecture
+<div align="center">
+  
+# ⚙️ TrackMySub | Backend & ML Engine
 
-## Problem Statement
-Detecting recurring subscriptions from a raw bank statement or CSV file is difficult because vendor names often have slight variations (e.g., "Netflix Subscription" vs "NETFLIX INC 10329"), making basic string matching ineffective. 
+The central nervous system of the **TrackMySub** architecture. This directory holds the asynchronous **FastAPI** web server and the strictly localized **NLP/Machine Learning algorithms** that parse, vectorize, and heuristically extract hidden recurring subscriptions from noisy banking data. 
 
-## What We Built
-A unified, real-time Python service utilizing a hybrid **Machine Learning & Rule-Based algorithm** to actively digest financial payloads, group similar vendors securely, calculate their chronological billing frequencies, and identify hidden subscriptions.
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-%23F7931E.svg?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![Twilio](https://img.shields.io/badge/Twilio-F22F46?style=for-the-badge&logo=Twilio&logoColor=white)](https://www.twilio.com/)
 
-## Tech Stack
-* **Web Framework:** FastAPI with Uvicorn
-* **Data Engineering:** Pandas
-* **AI / Machine Learning:** Scikit-Learn (TF-IDF Vectorizer, Cosine Similarity)
-* **SMS Integration:** Twilio
-* **Data Validation:** Pydantic
+</div>
 
-## AI Integration Details
-The core logic resides in `services/detection.py` and is fully automated without relying on mock data.
+---
 
-1. **Text Normalization:** `preprocessing.py` utilizes Pandas and regex to sanitize transaction names, lowercasing tokens and stripping financial noise phrases (like "txn", "pos", "card").
-2. **Text Vectorization:** We utilize Scikit-Learn's `TfidfVectorizer` to convert text descriptions into multi-dimensional arrays, emphasizing unique words and ignoring common stopwords.
-3. **Clustering via Cosine Similarity:** The backend computes a `cosine_similarity` matrix comparing every transaction to every other transaction. We dynamically link clusters using a threshold index of `> 0.75`.
-4. **Time-Series Logic:** Once grouped, it analyzes the chronographical variance: 
-    * Validates amount stability (standard deviation < 0.3 or ±10%).
-    * Computes averages of time differences to classify recurrences perfectly into Weekly (~7 days), Monthly (~30 days), or Yearly (~365 days).
+## 🏗️ Backend System Architecture
 
-## Architecture Details
-- **`main.py`**: Boots the ASGI server ensuring optimized async execution.
-- **`routes/api.py`**: Exposes REST interfaces (`/analyze-transactions`, `/subscriptions`, `/cancel-subscription`). Handles Twilio and Brevo credentials to dispatch live SMS and Email alerts immediately upon cancellation.
-- **`services/insights.py`**: Performs mathematical reductions projecting overall yearly/monthly analytics based on detected metadata.
+1. **`main.py`**: The FastAPI application entrypoint. Configures CORS, mounts the routing module, and initializes the high-performance HTTP ASGI listener.
+2. **`routes/api.py`**: The API Gateway holding the core endpoints (`/analyze-transactions`, `/cancel-subscription`). Functions as the bridge between the React frontend UI state and the backend AI data models.
+3. **`services/preprocessing.py`**: Automated Data Scrubbing. Uses complex regular expressions and string manipulation to instantly strip numerical variance, random timestamps, and financial special characters from unorganized Bank Statement CSVs.
+4. **`services/detection.py`**: The physical Machine Learning brain. It executes **TF-IDF Vectorization** and **Cosine Similarity Matrixing** to mathematically group identical vendors logic. It then applies statistical standard deviation on billing dates to extract exact recurrence periods.
+5. **`services/insights.py`**: Provides mathematical aggregations across the modeled data predicting structural "Burn Rate" and net savings after hypothetical cancellations.
+6. **`twilio_client.py` & `brevo_client.py`**: Synchronous webhook modules mapping the Python cancellation hooks to physical real-world **SMS Dispatches** and **SMTP Emails**.
 
-## ⚙️ Environment Configuration
-Create a `.env` file in the root of `/backend`:
-```env
-TWILIO_ACCOUNT_SID=...
-TWILIO_AUTH_TOKEN=...
-TWILIO_PHONE_NUMBER=...
-MY_MOBILE_NUMBER=...
-BREVO_SMTP_KEY=...
-BREVO_SENDER_EMAIL=...
+---
+
+## 🚀 Primary API Endpoints
+
+### 1. `POST /api/analyze-transactions`
+The foundational trigger connecting the user's raw bank data to the AI.
+- **Accepts:** Target file upload (`multipart/form-data`) representing standard banking CSVs.
+- **Engine Process:** The CSV is pushed via a `StringIO` memory buffer into `preprocessing.py` then straight into `detection.py`. The machine learning isolates clusters and outputs a structural dictionary.
+- **Returns:** Fully realized JSON payload mapping every recognized subscription, deeply typed with fields such as `amount`, `next_billing_date`, and calculated `frequency` (Weekly, Monthly, Yearly).
+
+### 2. `POST /api/cancel-subscription`
+The 1-Click Operational hook that the frontend utilizes to terminate digital contracts.
+- **Accepts:** Standard JSON Request referencing a strictly typed `subscription_id` and formatted `subscription_name`.
+- **Engine Process:** Intercepts the request and mathematically alters the hypothetical state of the User's budget projection to "CANCELLED". Immediately after, it invokes the **Twilio SDK** and **Brevo REST API** to blast physical confirmation of the action to the user's mobile device and inbox.
+- **Returns:** HTTP 200 Success + "Webhook Dispatch Confirmed".
+
+---
+
+## 🧬 Machine Learning Pipeline (HackArena Deep-Dive)
+To ensure production-grade accuracy for the hackathon presentation, we purposefully skipped brittle string-matching (which fails against ever-changing bank formats) and built mathematical certainty:
+
+- **`TfidfVectorizer` (Scikit-Learn):** By calculating Term Frequency-Inverse Document Frequency, the AI automatically down-weights completely useless, high-frequency banking terms like "POS", "CARD", "VISA", or "DEBIT", and artificially amplifies the mathematical density of the actual corporate entity naming (e.g. "NETFLIX", "SPOTIFY").
+- **Multi-Dimensional Cosine Similarity:** Once the text is an array of floating-point mathematics, we identify identical entity clusters by checking the exact angle between their matrix vectors. A cosine score exceeding our strict internal threshold triggers standard clustering logic.
+- **Standard Deviation Temporal Detection:** To ensure repeated ad-hoc purchases (e.g., getting a coffee at Starbucks every Tuesday) aren't flagged as subscriptions, the AI scans grouped transactions for their "Date Deltas". If the variance between these purchases fluctuates wildly over the interval, it kills the classification, effectively ensuring near-zero false positive subscription matches.
+
+---
+
+## ⚙️ Development Environment Setup
+
+*(Required Python Version: `^3.8`)*
+
+```bash
+# 1. Initialize Virtual Environment (Keeps dependencies isolated)
+python -m venv venv
+
+# 2. Activate Virtual Environment
+# Windows Systems:
+venv\Scripts\activate
+# Mac/UNIX Systems:
+source venv/bin/activate
+
+# 3. Inject Core Dependencies
+pip install -r requirements.txt
+
+# 4. Configure Secret Environment Integrations
+# Create a .env file locally directly in the root of the backend folder:
+TWILIO_ACCOUNT_SID=your_credential_here
+TWILIO_AUTH_TOKEN=your_token_here
+TWILIO_PHONE_NUMBER=+1234567890
+MY_PHONE_NUMBER=+10987654321
+BREVO_API_KEY=your_brevo_key_here
+
+# 5. Boot the ASGI Server Engine
+uvicorn main:app --reload
+
+# Fast API will expose the environment on http://localhost:8000
+# Automatic generated OpenAPI/Swagger UI Documentation mounts on http://localhost:8000/docs
 ```
