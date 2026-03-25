@@ -8,7 +8,7 @@ const Alerts = ({ subscriptions }) => {
     const bDate = sub.next_billing_date || sub.nextBillingDate;
     if (!bDate) return false;
     const days = differenceInDays(new Date(bDate), new Date());
-    return days >= 0 && days <= 7;
+    return days >= 0 && days <= 30;
   }).sort((a, b) => new Date(a.next_billing_date || a.nextBillingDate) - new Date(b.next_billing_date || b.nextBillingDate));
 
   return (
@@ -64,7 +64,7 @@ const Alerts = ({ subscriptions }) => {
 
       <div className="mt-6 flex items-center justify-center gap-2 text-slate-600">
          <HiOutlineClock className="w-4 h-4" />
-         <span className="text-[0.6rem] font-black uppercase tracking-[0.2em]">Next 7 Days Monitored</span>
+         <span className="text-[0.6rem] font-black uppercase tracking-[0.2em]">Next 30 Days Monitored</span>
       </div>
     </motion.div>
   );
