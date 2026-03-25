@@ -11,6 +11,7 @@ import {
 import { format } from 'date-fns';
 import { cancelSubscription } from '../services/api';
 import { updateSubscriptionInFirebase, auth } from '../services/firebase';
+import { toast } from 'react-hot-toast';
 
 const SubscriptionCard = ({ subscription, onUpdate, index }) => {
   const [cancelling, setCancelling] = useState(false);
@@ -31,10 +32,11 @@ const SubscriptionCard = ({ subscription, onUpdate, index }) => {
       setTimeout(() => {
          onUpdate(id, { ...subscription, status: 'Cancelled' });
          setShowSavings(false);
+         toast.success(`${name} Cancelled successfully!`);
       }, 2500);
     } catch (err) {
       console.error("Cancellation failed", err);
-      alert("Failed to cancel subscription. Please check your network.");
+      toast.error("Failed to cancel subscription. Please check your network.");
     } finally {
       setCancelling(false);
     }
