@@ -3,6 +3,9 @@ import { Outlet } from 'react-router-dom';
 import { getSubscriptionsFromFirebase, auth } from '../services/firebase';
 import Sidebar from '../components/Sidebar';
 import { Bell, Activity } from 'lucide-react';
+import { differenceInDays } from 'date-fns';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
   const [subscriptions, setSubscriptions] = useState([]);
@@ -39,6 +42,23 @@ const Home = () => {
   };
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const upcomingCount = subscriptions.filter(sub => {
+    const bDate = sub.next_billing_date || sub.nextBillingDate;
+    if (!bDate) return false;
+    const days = differenceInDays(new Date(bDate), new Date());
+    return days >= 0 && days <= 30 && sub.status === 'Active';
+  }).length;
+
+  const handleNotificationClick = () => {
+    if (upcomingCount > 0) {
+      toast.success(`You have ${upcomingCount} upcoming active renewals inside your Dashboard alerts.`, { icon: '🔔' });
+      navigate('/dashboard');
+    } else {
+      toast('No upcoming renewals in the next 30 days.', { icon: '✅' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#020617] text-slate-200 flex font-sans overflow-hidden">
@@ -68,9 +88,14 @@ const Home = () => {
                  <span className="text-[0.8rem] text-blue-400 font-medium">{auth.currentUser?.email}</span>
               </div>
               
-              <button className="p-2.5 text-slate-400 hover:text-white transition-all bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 rounded-xl relative shadow-inner">
+              <button 
+                onClick={handleNotificationClick}
+                className="p-2.5 text-slate-400 hover:text-white transition-all bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 rounded-xl relative shadow-inner"
+              >
                 <Bell className="w-5 h-5" />
-                <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-[#020617] ring-1 ring-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span>
+                {upcomingCount > 0 && (
+                  <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-rose-500 rounded-full border-2 border-[#020617] ring-1 ring-rose-500 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span>
+                )}
               </button>
 
               <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center p-[1px] shadow-lg shadow-blue-900/20">
