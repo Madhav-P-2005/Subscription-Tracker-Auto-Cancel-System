@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import SubscriptionList from '../components/SubscriptionList';
 import { HiOutlineAdjustments, HiOutlineSearch, HiOutlineDownload } from 'react-icons/hi';
@@ -6,6 +6,12 @@ import Papa from 'papaparse';
 import { toast } from 'react-hot-toast';
 
 const SubscriptionsView = ({ subscriptions, onUpdate }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const filteredSubscriptions = subscriptions?.filter(sub => 
+    sub.name.toLowerCase().includes(searchQuery.toLowerCase())
+  ) || [];
+
   const handleDownloadCSV = () => {
     if (!subscriptions || subscriptions.length === 0) {
       toast.error("No subscriptions to download.");
@@ -73,6 +79,8 @@ const SubscriptionsView = ({ subscriptions, onUpdate }) => {
              <input 
                type="text" 
                placeholder="Filter services by name..."
+               value={searchQuery}
+               onChange={(e) => setSearchQuery(e.target.value)}
                className="w-full bg-slate-900/40 border border-slate-800 focus:border-emerald-500/50 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-medium"
              />
           </motion.div>
@@ -99,7 +107,7 @@ const SubscriptionsView = ({ subscriptions, onUpdate }) => {
         <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-32 -mt-32 pointer-events-none"></div>
         
         <SubscriptionList 
-          subscriptions={subscriptions} 
+          subscriptions={filteredSubscriptions} 
           onUpdateSubscription={onUpdate} 
         />
       </motion.div>
