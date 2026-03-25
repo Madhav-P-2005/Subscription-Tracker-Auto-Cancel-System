@@ -16,6 +16,7 @@ import { Loader2 } from 'lucide-react';
 import { useOutletContext } from 'react-router-dom';
 import { analyzeTransactions } from './services/api';
 import { saveSubscriptionsToFirebase, saveTransactionsToFirebase } from './services/firebase';
+import { Toaster } from 'react-hot-toast';
 
 // Wrapper components to pass context to the views
 const DashboardWrapper = () => {
@@ -38,9 +39,12 @@ const AnalyzeWrapper = () => {
             if (res.subscriptions) {
                 await saveSubscriptionsToFirebase(res.subscriptions);
                 setSubsDirectly(res.subscriptions);
+                return res;
             }
+            throw new Error("Analysis failed");
         } catch (err) {
             console.error("Error analyzing:", err);
+            throw err;
         }
     };
 
@@ -159,6 +163,16 @@ function App() {
 
   return (
     <Router>
+      <Toaster 
+        position="top-right" 
+        toastOptions={{
+          style: {
+            background: '#1e293b',
+            color: '#f8fafc',
+            border: '1px solid #334155',
+          },
+        }} 
+      />
       <AnimatedRoutes user={user} loading={loading} />
     </Router>
   );

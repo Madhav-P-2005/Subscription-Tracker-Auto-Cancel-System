@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Papa from 'papaparse';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'react-hot-toast';
 import { 
   HiOutlineCloudUpload, 
   HiOutlineCheckCircle, 
@@ -34,14 +35,17 @@ const Upload = ({ onDataUpload }) => {
     if (data.length === 0) return;
     setLoading(true);
     
-    // Simulate API call to FastAPI backend
-    setTimeout(() => {
+    try {
+      if (onDataUpload) {
+        await onDataUpload(data);
+      }
       setLoading(false);
       setSuccess(true);
-      if (onDataUpload) {
-        onDataUpload(data);
-      }
-    }, 2000);
+      toast.success("AI Analysis Complete!");
+    } catch (error) {
+      setLoading(false);
+      toast.error("Analysis failed. Please try again.");
+    }
   };
 
   return (
@@ -135,33 +139,27 @@ const Upload = ({ onDataUpload }) => {
             exit={{ opacity: 0, scale: 0.98 }}
             className="space-y-6"
           >
-            <div className="rounded-[2rem] border border-slate-800 bg-slate-900/40 overflow-hidden shadow-inner">
-               <table className="w-full text-left">
-                  <thead className="bg-slate-800/50">
-                    <tr>
-                      <th className="px-8 py-5 text-[0.65rem] font-black text-slate-500 uppercase tracking-widest">Entry Date</th>
-                      <th className="px-8 py-5 text-[0.65rem] font-black text-slate-500 uppercase tracking-widest">Description</th>
-                      <th className="px-8 py-5 text-[0.65rem] font-black text-slate-500 uppercase tracking-widest text-right">Value</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/50">
-                    {data.slice(0, 4).map((row, idx) => (
-                      <tr key={idx} className="group/row transition-colors hover:bg-slate-800/30">
-                        <td className="px-8 py-4 font-mono text-[0.8rem] text-slate-400 group-hover/row:text-slate-200">{row.date || row.Date}</td>
-                        <td className="px-8 py-4 text-sm font-bold text-slate-300 group-hover/row:text-white truncate max-w-[200px]">{row.description || row.Description}</td>
-                        <td className="px-8 py-4 text-sm font-black text-white text-right">₹{row.amount || row.Amount || '0'}</td>
+            <div className="rounded-[2rem] border border-slate-800 bg-slate-900/40 overflow-hidden shadow-inner max-h-96 flex flex-col">
+               <div className="overflow-y-auto custom-scrollbar flex-1">
+                 <table className="w-full text-left relative">
+                    <thead className="bg-slate-800/50 sticky top-0 z-10 backdrop-blur-md">
+                      <tr>
+                        <th className="px-8 py-5 text-[0.65rem] font-black text-slate-500 uppercase tracking-widest">Entry Date</th>
+                        <th className="px-8 py-5 text-[0.65rem] font-black text-slate-500 uppercase tracking-widest">Description</th>
+                        <th className="px-8 py-5 text-[0.65rem] font-black text-slate-500 uppercase tracking-widest text-right">Value</th>
                       </tr>
-                    ))}
-                  </tbody>
-               </table>
-               {data.length > 4 && (
-                 <div className="p-4 bg-slate-900/60 text-center border-t border-slate-800/50">
-                    <span className="text-[0.6rem] font-black text-slate-600 uppercase tracking-widest flex items-center justify-center gap-2">
-                      <div className="w-1 h-1 bg-slate-600 rounded-full"></div>
-                      And {data.length - 4} more transactions hidden in cache
-                    </span>
-                 </div>
-               )}
+                    </thead>
+                    <tbody className="divide-y divide-slate-800/50">
+                      {data.map((row, idx) => (
+                        <tr key={idx} className="group/row transition-colors hover:bg-slate-800/30">
+                          <td className="px-8 py-4 font-mono text-[0.8rem] text-slate-400 group-hover/row:text-slate-200">{row.date || row.Date}</td>
+                          <td className="px-8 py-4 text-sm font-bold text-slate-300 group-hover/row:text-white truncate max-w-[200px]">{row.description || row.Description}</td>
+                          <td className="px-8 py-4 text-sm font-black text-white text-right">₹{row.amount || row.Amount || '0'}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                 </table>
+               </div>
             </div>
 
             <button
