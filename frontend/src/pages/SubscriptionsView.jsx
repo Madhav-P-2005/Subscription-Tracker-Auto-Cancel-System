@@ -1,9 +1,32 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import SubscriptionList from '../components/SubscriptionList';
-import { HiOutlineAdjustments, HiOutlineSearch } from 'react-icons/hi';
+import { HiOutlineAdjustments, HiOutlineSearch, HiOutlineDownload } from 'react-icons/hi';
+import Papa from 'papaparse';
+import { toast } from 'react-hot-toast';
 
 const SubscriptionsView = ({ subscriptions, onUpdate }) => {
+  const handleDownloadCSV = () => {
+    if (!subscriptions || subscriptions.length === 0) {
+      toast.error("No subscriptions to download.");
+      return;
+    }
+    try {
+      const csv = Papa.unparse(subscriptions);
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'subscriptions.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toast.success("CSV Downloaded Successfully!");
+    } catch (err) {
+      toast.error("Failed to generate CSV.");
+    }
+  };
+
   return (
     <div className="space-y-10 pb-20">
       <div className="max-w-4xl flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -39,19 +62,32 @@ const SubscriptionsView = ({ subscriptions, onUpdate }) => {
           </motion.p>
         </div>
 
-        <motion.div 
-           initial={{ opacity: 0, y: 10 }}
-           animate={{ opacity: 1, y: 0 }}
-           transition={{ delay: 0.3 }}
-           className="relative group min-w-[300px]"
-        >
-           <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5 group-focus-within:text-emerald-400 transition-colors" />
-           <input 
-             type="text" 
-             placeholder="Filter services by name..."
-             className="w-full bg-slate-900/40 border border-slate-800 focus:border-emerald-500/50 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-medium"
-           />
-        </motion.div>
+        <div className="flex flex-col sm:flex-row gap-4">
+          <motion.div 
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.3 }}
+             className="relative group min-w-[300px]"
+          >
+             <HiOutlineSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5 group-focus-within:text-emerald-400 transition-colors" />
+             <input 
+               type="text" 
+               placeholder="Filter services by name..."
+               className="w-full bg-slate-900/40 border border-slate-800 focus:border-emerald-500/50 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-slate-600 focus:outline-none focus:ring-4 focus:ring-emerald-500/10 transition-all font-medium"
+             />
+          </motion.div>
+          
+          <motion.button
+             initial={{ opacity: 0, y: 10 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.4 }}
+             onClick={handleDownloadCSV}
+             className="flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white py-4 px-6 rounded-2xl font-bold transition-colors shadow-lg shadow-emerald-500/20"
+          >
+             <HiOutlineDownload className="w-5 h-5" />
+             Export
+          </motion.button>
+        </div>
       </div>
 
       <motion.div 
