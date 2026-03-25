@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { format, addMonths, isSameMonth } from 'date-fns';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { motion } from 'framer-motion';
 import { 
@@ -45,16 +46,41 @@ const Dashboard = ({ subscriptions }) => {
       totalMonthlyCost += s.frequency?.toLowerCase() === 'yearly' ? s.amount / 12 : s.amount;
     });
     
-    // Create dummy chart data based on active subs to show a 6 month projection
+    // Real 6-month projected spending based on active subscriptions
     const chartData = [];
-    const months = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-    let base = Math.max(totalMonthlyCost - 500, 500);
-    months.forEach((m, i) => {
-       chartData.push({
-           name: m,
-           spending: i === months.length - 1 ? Math.round(totalMonthlyCost) : Math.round(base + (i * 100) + Math.random() * 200)
+    const today = new Date();
+    
+    for (let i = 0; i < 6; i++) {
+       const targetMonth = addMonths(today, i);
+       const monthName = format(targetMonth, 'MMM');
+       let monthlyTotal = 0;
+       
+       activeSubs.forEach(sub => {
+          const freq = sub.frequency?.toLowerCase();
+          const amount = Number(sub.amount) || 0;
+          
+          if (freq === 'monthly') {
+             monthlyTotal += amount;
+          } else if (freq === 'weekly') {
+             monthlyTotal += amount * 4.33; // Approx weeks in a month
+          } else if (freq === 'yearly') {
+             // Only add if the yearly billing occurs in this specific month
+             const bDate = sub.next_billing_date || sub.nextBillingDate;
+             if (bDate) {
+                 const billingDate = new Date(bDate);
+                 // Check if the target month matches the billing month
+                 if (billingDate.getMonth() === targetMonth.getMonth()) {
+                     monthlyTotal += amount;
+                 }
+             }
+          }
        });
-    });
+       
+       chartData.push({
+           name: monthName,
+           spending: Math.round(monthlyTotal)
+       });
+    }
 
     return { totalMonthlyCost: Math.round(totalMonthlyCost), chartData, count: activeSubs.length };
   }, [activeSubs]);
